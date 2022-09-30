@@ -1,0 +1,9 @@
+# path_constraint:
+    name: cable_placement_constraints
+    constraints:
+    - type: orientation
+      frame_id: /robot1_tf/base_footprint
+      link_name: /robot1_tf/wrist_3_link
+      orientation: [0.0, 0.0, -1.57079] #RPY
+      tolerances: [3.14, 0.1, 0.1]
+      weight: 1.0

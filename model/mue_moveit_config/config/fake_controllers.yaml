@@ -1,0 +1,12 @@
+controller_list:
+  - name: fake_arm_controller
+    joints:
+      - $(arg tf_prefix)shoulder_pan_joint
+      - $(arg tf_prefix)shoulder_lift_joint
+      - $(arg tf_prefix)elbow_joint
+      - $(arg tf_prefix)wrist_1_joint
+      - $(arg tf_prefix)wrist_2_joint
+      - $(arg tf_prefix)wrist_3_joint
+initial:  # Define initial robot poses.
+#  - group: arm
+#    pose: home

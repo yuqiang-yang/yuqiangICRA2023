@@ -1,0 +1,8 @@
+prefix=/home/vision/yq_ws/yq_ros_workspace/install
+
+Name: mue_moveit_config
+Description: Description of mue_moveit_config
+Version: 0.3.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

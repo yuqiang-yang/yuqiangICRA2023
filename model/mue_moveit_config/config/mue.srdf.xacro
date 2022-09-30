@@ -1,0 +1,194 @@
+<?xml version="1.0" ?>
+<!--This does not replace URDF, and is not an extension of URDF.
+    This is a format for representing semantic information about the robot structure.
+    A URDF file must exist for this robot as well, where the joints and the links that are referenced are defined
+-->
+<robot name="mue"
+        xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:arg name="tf_prefix" default=""/>
+    <!--GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to plan for, defining arms, end effectors, etc-->
+    <!--LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically included-->
+    <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
+    <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
+    <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
+    <group name="ur5e_arm">
+        <chain base_link="$(arg tf_prefix)base_link_ur5e" tip_link="$(arg tf_prefix)wrist_3_link" />
+    </group>
+    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
+    <group_state name="all_zero" group="ur5e_arm">
+        <joint name="$(arg tf_prefix)elbow_joint" value="0" />
+        <joint name="$(arg tf_prefix)shoulder_lift_joint" value="0" />
+        <joint name="$(arg tf_prefix)shoulder_pan_joint" value="0" />
+        <joint name="$(arg tf_prefix)wrist_1_joint" value="0" />
+        <joint name="$(arg tf_prefix)wrist_2_joint" value="0" />
+        <joint name="$(arg tf_prefix)wrist_3_joint" value="0" />
+    </group_state>
+    <group_state name="up" group="ur5e_arm">
+        <joint name="$(arg tf_prefix)elbow_joint" value="0" />
+        <joint name="$(arg tf_prefix)shoulder_lift_joint" value="-1.5708" />
+        <joint name="$(arg tf_prefix)shoulder_pan_joint" value="0" />
+        <joint name="$(arg tf_prefix)wrist_1_joint" value="1.5708" />
+        <joint name="$(arg tf_prefix)wrist_2_joint" value="0" />
+        <joint name="$(arg tf_prefix)wrist_3_joint" value="0" />
+    </group_state>
+    <group_state name="home" group="ur5e_arm">
+        <joint name="$(arg tf_prefix)elbow_joint" value="2.2" />
+        <joint name="$(arg tf_prefix)shoulder_lift_joint" value="-2.7" />
+        <joint name="$(arg tf_prefix)shoulder_pan_joint" value="0" />
+        <joint name="$(arg tf_prefix)wrist_1_joint" value="0.5" />
+        <joint name="$(arg tf_prefix)wrist_2_joint" value="1.5708" />
+        <joint name="$(arg tf_prefix)wrist_3_joint" value="0" />
+    </group_state>
+    <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
+    <virtual_joint name="fixed_base" type="fixed" parent_frame="$(arg tf_prefix)base_link" child_link="$(arg tf_prefix)base_footprint" />
+    <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
+    <passive_joint name="$(arg tf_prefix)bl_caster_rotation_joint" />
+    <passive_joint name="$(arg tf_prefix)bl_caster_wheel_joint" />
+    <passive_joint name="$(arg tf_prefix)br_caster_rotation_joint" />
+    <passive_joint name="$(arg tf_prefix)br_caster_wheel_joint" />
+    <passive_joint name="$(arg tf_prefix)fl_caster_rotation_joint" />
+    <passive_joint name="$(arg tf_prefix)fl_caster_wheel_joint" />
+    <passive_joint name="$(arg tf_prefix)fr_caster_rotation_joint" />
+    <passive_joint name="$(arg tf_prefix)fr_caster_wheel_joint" />
+    <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
+    <disable_collisions link1="$(arg tf_prefix)back_camera_link" link2="$(arg tf_prefix)base_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)back_camera_link" link2="$(arg tf_prefix)base_link_ur5e" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)back_camera_link" link2="$(arg tf_prefix)bl_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)back_camera_link" link2="$(arg tf_prefix)bl_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)back_camera_link" link2="$(arg tf_prefix)br_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)back_camera_link" link2="$(arg tf_prefix)br_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)back_camera_link" link2="$(arg tf_prefix)fl_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)back_camera_link" link2="$(arg tf_prefix)fl_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)back_camera_link" link2="$(arg tf_prefix)fr_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)back_camera_link" link2="$(arg tf_prefix)fr_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)back_camera_link" link2="$(arg tf_prefix)front_camera_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)back_camera_link" link2="$(arg tf_prefix)left_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)back_camera_link" link2="$(arg tf_prefix)right_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)back_camera_link" link2="$(arg tf_prefix)shoulder_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)base_link" link2="$(arg tf_prefix)base_link_ur5e" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)base_link" link2="$(arg tf_prefix)bl_caster_rotation_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)base_link" link2="$(arg tf_prefix)bl_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)base_link" link2="$(arg tf_prefix)br_caster_rotation_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)base_link" link2="$(arg tf_prefix)br_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)base_link" link2="$(arg tf_prefix)fl_caster_rotation_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)base_link" link2="$(arg tf_prefix)fl_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)base_link" link2="$(arg tf_prefix)fr_caster_rotation_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)base_link" link2="$(arg tf_prefix)fr_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)base_link" link2="$(arg tf_prefix)front_camera_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)base_link" link2="$(arg tf_prefix)left_wheel_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)base_link" link2="$(arg tf_prefix)right_wheel_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)base_link" link2="$(arg tf_prefix)shoulder_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)base_link_ur5e" link2="$(arg tf_prefix)bl_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)base_link_ur5e" link2="$(arg tf_prefix)bl_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)base_link_ur5e" link2="$(arg tf_prefix)br_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)base_link_ur5e" link2="$(arg tf_prefix)br_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)base_link_ur5e" link2="$(arg tf_prefix)fl_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)base_link_ur5e" link2="$(arg tf_prefix)fl_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)base_link_ur5e" link2="$(arg tf_prefix)fr_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)base_link_ur5e" link2="$(arg tf_prefix)fr_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)base_link_ur5e" link2="$(arg tf_prefix)front_camera_link" reason="Default" />
+    <disable_collisions link1="$(arg tf_prefix)base_link_ur5e" link2="$(arg tf_prefix)left_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)base_link_ur5e" link2="$(arg tf_prefix)right_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)base_link_ur5e" link2="$(arg tf_prefix)shoulder_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_rotation_link" link2="$(arg tf_prefix)bl_caster_wheel_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_rotation_link" link2="$(arg tf_prefix)br_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_rotation_link" link2="$(arg tf_prefix)br_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_rotation_link" link2="$(arg tf_prefix)fl_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_rotation_link" link2="$(arg tf_prefix)fl_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_rotation_link" link2="$(arg tf_prefix)fr_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_rotation_link" link2="$(arg tf_prefix)fr_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_rotation_link" link2="$(arg tf_prefix)front_camera_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_rotation_link" link2="$(arg tf_prefix)left_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_rotation_link" link2="$(arg tf_prefix)right_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_rotation_link" link2="$(arg tf_prefix)shoulder_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_rotation_link" link2="$(arg tf_prefix)upper_arm_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_wheel_link" link2="$(arg tf_prefix)br_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_wheel_link" link2="$(arg tf_prefix)br_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_wheel_link" link2="$(arg tf_prefix)fl_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_wheel_link" link2="$(arg tf_prefix)fl_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_wheel_link" link2="$(arg tf_prefix)fr_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_wheel_link" link2="$(arg tf_prefix)fr_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_wheel_link" link2="$(arg tf_prefix)front_camera_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_wheel_link" link2="$(arg tf_prefix)left_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_wheel_link" link2="$(arg tf_prefix)right_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_wheel_link" link2="$(arg tf_prefix)shoulder_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)bl_caster_wheel_link" link2="$(arg tf_prefix)upper_arm_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_rotation_link" link2="$(arg tf_prefix)br_caster_wheel_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_rotation_link" link2="$(arg tf_prefix)fl_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_rotation_link" link2="$(arg tf_prefix)fl_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_rotation_link" link2="$(arg tf_prefix)fr_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_rotation_link" link2="$(arg tf_prefix)fr_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_rotation_link" link2="$(arg tf_prefix)front_camera_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_rotation_link" link2="$(arg tf_prefix)left_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_rotation_link" link2="$(arg tf_prefix)right_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_rotation_link" link2="$(arg tf_prefix)shoulder_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_rotation_link" link2="$(arg tf_prefix)upper_arm_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_wheel_link" link2="$(arg tf_prefix)fl_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_wheel_link" link2="$(arg tf_prefix)fl_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_wheel_link" link2="$(arg tf_prefix)fr_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_wheel_link" link2="$(arg tf_prefix)fr_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_wheel_link" link2="$(arg tf_prefix)front_camera_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_wheel_link" link2="$(arg tf_prefix)left_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_wheel_link" link2="$(arg tf_prefix)right_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_wheel_link" link2="$(arg tf_prefix)shoulder_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)br_caster_wheel_link" link2="$(arg tf_prefix)upper_arm_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)camera_base_link" link2="camera_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)camera_base_link" link2="$(arg tf_prefix)charger_base_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)camera_base_link" link2="$(arg tf_prefix)charger_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)camera_base_link" link2="$(arg tf_prefix)wrist_1_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)camera_base_link" link2="$(arg tf_prefix)wrist_2_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)camera_base_link" link2="$(arg tf_prefix)wrist_3_link" reason="Never" />
+    <disable_collisions link1="camera_link" link2="$(arg tf_prefix)charger_base_link" reason="Never" />
+    <disable_collisions link1="camera_link" link2="$(arg tf_prefix)charger_link" reason="Never" />
+    <disable_collisions link1="camera_link" link2="$(arg tf_prefix)wrist_1_link" reason="Never" />
+    <disable_collisions link1="camera_link" link2="$(arg tf_prefix)wrist_2_link" reason="Never" />
+    <disable_collisions link1="camera_link" link2="$(arg tf_prefix)wrist_3_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)charger_base_link" link2="$(arg tf_prefix)charger_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)charger_base_link" link2="$(arg tf_prefix)wrist_1_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)charger_base_link" link2="$(arg tf_prefix)wrist_2_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)charger_base_link" link2="$(arg tf_prefix)wrist_3_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)charger_link" link2="$(arg tf_prefix)wrist_1_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)charger_link" link2="$(arg tf_prefix)wrist_2_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)charger_link" link2="$(arg tf_prefix)wrist_3_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fl_caster_rotation_link" link2="$(arg tf_prefix)fl_caster_wheel_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)fl_caster_rotation_link" link2="$(arg tf_prefix)fr_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fl_caster_rotation_link" link2="$(arg tf_prefix)fr_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fl_caster_rotation_link" link2="$(arg tf_prefix)front_camera_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fl_caster_rotation_link" link2="$(arg tf_prefix)left_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fl_caster_rotation_link" link2="$(arg tf_prefix)right_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fl_caster_rotation_link" link2="$(arg tf_prefix)shoulder_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fl_caster_rotation_link" link2="$(arg tf_prefix)upper_arm_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fl_caster_wheel_link" link2="$(arg tf_prefix)fr_caster_rotation_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fl_caster_wheel_link" link2="$(arg tf_prefix)fr_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fl_caster_wheel_link" link2="$(arg tf_prefix)front_camera_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fl_caster_wheel_link" link2="$(arg tf_prefix)left_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fl_caster_wheel_link" link2="$(arg tf_prefix)right_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fl_caster_wheel_link" link2="$(arg tf_prefix)shoulder_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fl_caster_wheel_link" link2="$(arg tf_prefix)upper_arm_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)forearm_link" link2="$(arg tf_prefix)upper_arm_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)forearm_link" link2="$(arg tf_prefix)wrist_1_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)forearm_link" link2="$(arg tf_prefix)wrist_2_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fr_caster_rotation_link" link2="$(arg tf_prefix)fr_caster_wheel_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)fr_caster_rotation_link" link2="$(arg tf_prefix)front_camera_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fr_caster_rotation_link" link2="$(arg tf_prefix)left_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fr_caster_rotation_link" link2="$(arg tf_prefix)right_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fr_caster_rotation_link" link2="$(arg tf_prefix)shoulder_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fr_caster_rotation_link" link2="$(arg tf_prefix)upper_arm_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fr_caster_wheel_link" link2="$(arg tf_prefix)front_camera_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fr_caster_wheel_link" link2="$(arg tf_prefix)left_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fr_caster_wheel_link" link2="$(arg tf_prefix)right_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fr_caster_wheel_link" link2="$(arg tf_prefix)shoulder_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)fr_caster_wheel_link" link2="$(arg tf_prefix)upper_arm_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)front_camera_link" link2="$(arg tf_prefix)left_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)front_camera_link" link2="$(arg tf_prefix)right_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)front_camera_link" link2="$(arg tf_prefix)shoulder_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)left_wheel_link" link2="$(arg tf_prefix)right_wheel_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)left_wheel_link" link2="$(arg tf_prefix)shoulder_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)left_wheel_link" link2="$(arg tf_prefix)upper_arm_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)right_wheel_link" link2="$(arg tf_prefix)shoulder_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)right_wheel_link" link2="$(arg tf_prefix)upper_arm_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)shoulder_link" link2="$(arg tf_prefix)upper_arm_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)wrist_1_link" link2="$(arg tf_prefix)wrist_2_link" reason="Adjacent" />
+    <disable_collisions link1="$(arg tf_prefix)wrist_1_link" link2="$(arg tf_prefix)wrist_3_link" reason="Never" />
+    <disable_collisions link1="$(arg tf_prefix)wrist_2_link" link2="$(arg tf_prefix)wrist_3_link" reason="Adjacent" />
+</robot>

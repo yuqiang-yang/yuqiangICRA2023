@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: mue_description
+    relative_path: urdf/mue.urdf.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/mue.srdf
+  CONFIG:
+    author_name: gsy
+    author_email: cajvon@gmail.com
+    generated_timestamp: 1615674212
